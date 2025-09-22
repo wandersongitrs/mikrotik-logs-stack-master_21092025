@@ -105,28 +105,47 @@ def format_telegram_message(log_data: LogMessage) -> str:
     
     # Base message with improved formatting
     message_parts = [
-        f"{header_emoji} **MIKROTIK ALERT**",
-        f"📅 {formatted_time}",
-        ""  # Empty line for spacing
+        f"{header_emoji} **FIREWALL BLOCKED**",
+        f"🕐 {formatted_time}",
+        ""
     ]
     
     # Firewall Drop specific format
     if log_data.action == "Drop":
-        message_parts.extend([
-            f"🛡️ **FIREWALL DROP**",
-            f"📍 {log_data.proto or 'UDP'} • {log_data.in_interface or 'Unknown'}"
-        ])
+        # Extract rule name from message for better context
+        rule_name = "Default Deny"
+        if "[" in log_data.message and "]" in log_data.message:
+            try:
+                rule_part = log_data.message.split("[")[1].split("]")[0]
+                if ":" in rule_part:
+                    rule_name = rule_part.split(":", 1)[1].strip()
+            except:
+                pass
         
-        # Connection details in single line
+        # Connection info with better formatting
         if log_data.srcip and log_data.dstip:
-            src = f"{log_data.srcip}:{log_data.srcport or '0'}"
-            dst = f"{log_data.dstip}:{log_data.dstport or '0'}"
-            message_parts.append(f"🔗 {src} → {dst}")
-        
-        # MAC address if available
-        if log_data.src_mac and log_data.src_mac != "unknown":
-            message_parts.append(f"🏷️ {log_data.src_mac}")
+            src_info = f"📤 **Origem:** {log_data.srcip}:{log_data.srcport or '0'}"
+            dst_info = f"📥 **Destino:** {log_data.dstip}:{log_data.dstport or '0'}"
             
+            message_parts.extend([
+                f"🚫 **Regra:** {rule_name}",
+                f"🌐 **Protocolo:** {log_data.proto or 'UDP'}",
+                f"🔌 **Interface:** {log_data.in_interface or 'Unknown'}",
+                "",
+                src_info,
+                dst_info
+            ])
+            
+            # Add MAC if available
+            if log_data.src_mac and log_data.src_mac != "unknown":
+                message_parts.append(f"🏷️ **MAC:** {log_data.src_mac}")
+                
+            # Add broadcast/multicast detection
+            if log_data.dstip == "255.255.255.255":
+                message_parts.append("📢 **Tipo:** Broadcast")
+            elif log_data.dstip.startswith("224."):
+                message_parts.append("📡 **Tipo:** Multicast")
+        
     else:
         # Other alert types
         message_parts.extend([
@@ -137,10 +156,10 @@ def format_telegram_message(log_data: LogMessage) -> str:
         if log_data.priority:
             message_parts.append(f"{priority_emoji} {log_data.priority.upper()}")
     
-    # Add separator and summary
+    # Add compact footer
     message_parts.extend([
-        "─" * 25,
-        f"💬 {log_data.message}"
+        "",
+        f"🔍 **Log:** {log_data.message[:80]}..." if len(log_data.message) > 80 else f"🔍 **Log:** {log_data.message}"
     ])
     
     return "\n".join(message_parts)

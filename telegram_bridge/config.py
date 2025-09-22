@@ -6,7 +6,7 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 # Rate Limiting Configuration
-RATE_LIMIT = int(os.getenv("RATE_LIMIT", "5"))   # messages per minute
+RATE_LIMIT = int(os.getenv("RATE_LIMIT", "2"))   # messages per minute
 DEDUP_WINDOW = int(os.getenv("DEDUP_WINDOW", "60"))  # seconds
 MIN_SEVERITY = os.getenv("MIN_SEVERITY", "info")
 
