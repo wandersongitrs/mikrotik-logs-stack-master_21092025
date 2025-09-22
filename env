@@ -1,0 +1,14 @@
+# Telegram Bot Configuration
+TELEGRAM_BOT_TOKEN=8024946503:AAHTihXhi0W517ZN6UlKn5PeVPxgqyMtC8w
+TELEGRAM_CHAT_ID=-4771288881
+
+# Elasticsearch Configuration
+ELASTICSEARCH_HOST=elasticsearch
+ELASTICSEARCH_PORT=9200
+
+# Logstash Configuration
+LOGSTASH_UDP_PORT=514
+
+# Grafana Configuration
+GRAFANA_ADMIN_USER=admin
+GRAFANA_ADMIN_PASSWORD=admin

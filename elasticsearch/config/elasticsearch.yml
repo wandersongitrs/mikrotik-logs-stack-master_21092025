@@ -1,0 +1,16 @@
+cluster.name: "mikrotik-logs-cluster"
+node.name: "mikrotik-logs-node"
+network.host: 0.0.0.0
+http.port: 9200
+discovery.type: single-node
+xpack.security.enabled: false
+xpack.monitoring.enabled: true
+xpack.monitoring.collection.enabled: true
+
+# Performance settings
+indices.memory.index_buffer_size: 30%
+indices.queries.cache.size: 10%
+indices.fielddata.cache.size: 10%
+
+# Logging
+logger.level: INFO

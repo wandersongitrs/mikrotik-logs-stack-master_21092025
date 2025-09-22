@@ -1,0 +1,15 @@
+server.host: "0.0.0.0"
+server.port: 5601
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+xpack.security.enabled: false
+xpack.monitoring.enabled: true
+xpack.monitoring.ui.container.elasticsearch.enabled: true
+
+# Performance settings
+optimize.bundleFilter: "!tests"
+optimize.useBundleCache: true
+optimize.bundleDir: "/var/lib/kibana/optimize"
+
+# Logging
+logging.verbose: false
+logging.dest: stdout
