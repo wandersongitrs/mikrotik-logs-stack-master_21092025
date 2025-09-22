@@ -111,20 +111,20 @@ def format_telegram_message(log_data: LogMessage) -> str:
     ]
     
     # Firewall Drop specific format
-    if log_data.action == "Drop" and log_data.proto:
+    if log_data.action == "Drop":
         message_parts.extend([
             f"🛡️ **FIREWALL DROP**",
-            f"📍 {log_data.proto} • {log_data.in_interface or 'Unknown'}"
+            f"📍 {log_data.proto or 'UDP'} • {log_data.in_interface or 'Unknown'}"
         ])
         
         # Connection details in single line
         if log_data.srcip and log_data.dstip:
-            src = f"{log_data.srcip}:{log_data.srcport}" if log_data.srcport else log_data.srcip
-            dst = f"{log_data.dstip}:{log_data.dstport}" if log_data.dstport else log_data.dstip
+            src = f"{log_data.srcip}:{log_data.srcport or '0'}"
+            dst = f"{log_data.dstip}:{log_data.dstport or '0'}"
             message_parts.append(f"🔗 {src} → {dst}")
         
         # MAC address if available
-        if log_data.src_mac:
+        if log_data.src_mac and log_data.src_mac != "unknown":
             message_parts.append(f"🏷️ {log_data.src_mac}")
             
     else:
